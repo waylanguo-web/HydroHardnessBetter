@@ -1,1 +1,1 @@
-{"name":"hydro-hardness-better","version":"1.0.0","private":true,"main":"index.js","scripts":{"test":"node --test test/*.test.js"},"peerDependencies":{"hydrooj":"*"}}
+{"name":"hydro-hardness-better","version":"1.0.0","private":true,"main":"index.js","scripts":{"test":"node --test test/*.test.js"},"peerDependencies":{"hydrooj":"*"},"devDependencies":{"nunjucks":"^3.2.4"}}

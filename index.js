@@ -1,5 +1,6 @@
 'use strict';
-const { valid, render } = require('./difficulty');
+const { valid } = require('./difficulty');
+const { patchTemplate } = require('./template');
 exports.name = 'hydro-hardness-better';
 exports.inject = ['template'];
 exports.apply = function apply(ctx) {
@@ -23,20 +24,14 @@ exports.apply = function apply(ctx) {
   const registry = ctx.template.registry;
   const originals = new Map();
   // Apply after other template plugins, preserving their unrelated changes.
-  const expression = /{{\s*pdoc\['difficulty'\]\s*or\s*lib\.difficulty\(pdoc\.nSubmit,\s*pdoc\.nAccept\)\s*or\s*_\('\(None\)'\)\s*}}/g;
   const patch = () => {
     for (const [key, source] of Object.entries(registry)) {
       if (typeof source !== 'string') continue;
-      let result = source.replace(expression, "{{ hydroHardness(pdoc['difficulty']) | safe }}");
+      let result = patchTemplate(source);
       if (key === 'problem_edit.html') result = result.replace("help_text:'From 1-10'", "help_text:'800–4000，整数；留空表示未评级'");
       if (result !== source) { originals.set(key, source); registry[key] = result; }
     }
   };
-  ctx.on('handler/after', (handler) => {
-    if (handler.response.body && typeof handler.response.body === 'object') {
-      handler.response.body.hydroHardness = render;
-    }
-  });
   ctx.on('app/started', patch);
   // Template service initialization may finish after app/started.
   ctx.on('handler/before', patch);
