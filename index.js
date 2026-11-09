@@ -38,6 +38,8 @@ exports.apply = function apply(ctx) {
     }
   });
   ctx.on('app/started', patch);
+  // Template service initialization may finish after app/started.
+  ctx.on('handler/before', patch);
   patch();
   ctx.on('dispose', () => {
     for (const { arg, validate } of undo) arg.validate = validate;
