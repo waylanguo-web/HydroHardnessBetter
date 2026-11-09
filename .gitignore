@@ -1,0 +1,5 @@
+.upstream/
+.tools/
+node_modules/
+*.log
+.deploy*
